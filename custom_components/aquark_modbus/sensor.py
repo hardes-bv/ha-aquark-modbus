@@ -1,4 +1,4 @@
-"""Sensor platform for the Example Air integration."""
+"""Sensor platform for the Aquark (Modbus) integration."""
 
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -28,7 +28,7 @@ from .entity import AquarkEntity
 
 @dataclass(frozen=True, kw_only=True)
 class AquarkSensorEntityDescription(SensorEntityDescription):
-    """Describe an Example Air sensor."""
+    """Describe an Aquark sensor."""
 
     value_fn: Callable[[Chlorinator], float | int]
 
@@ -62,7 +62,7 @@ async def async_setup_entry(
         entry: AquarkConfigEntry,
         async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up the Example Air sensors."""
+    """Set up the Aquark sensors."""
     coordinator = entry.runtime_data
 
     async_add_entities(

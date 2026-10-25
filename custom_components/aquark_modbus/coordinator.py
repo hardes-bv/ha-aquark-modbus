@@ -1,4 +1,4 @@
-"""Data update coordinator for the Fairland (Modbus) integration."""
+"""Data update coordinator for the Aquark (Modbus) integration."""
 
 import logging
 from typing import override

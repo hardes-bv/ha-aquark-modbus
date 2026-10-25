@@ -72,7 +72,7 @@ def mock_connection(register_image: dict[str, dict[int, Any]]) -> MockModbusConn
 
 @pytest.fixture
 def mock_unit(mock_connection: MockModbusConnection) -> MockModbusUnit:
-    """The mock heat pump at address 1."""
+    """The mock chlorinator at address 1."""
     return mock_connection.for_unit(1)
 
 
@@ -109,7 +109,7 @@ def mock_temporary_unit(
 
 @pytest.fixture
 def mock_config_entry(entry_data: dict[str, Any]) -> MockConfigEntry:
-    """A config entry for the mock heat pump."""
+    """A config entry for the mock chlorinator."""
     return MockConfigEntry(
         domain=DOMAIN, entry_id=MOCK_ENTRY_ID, data=entry_data, title=MOCK_TITLE
     )
@@ -121,7 +121,7 @@ async def init_integration(
         mock_config_entry: MockConfigEntry,
         mock_get_unit: MagicMock,
 ) -> MockConfigEntry:
-    """Set up the integration with the mock heat pump."""
+    """Set up the integration with the mock chlorinator."""
     mock_config_entry.add_to_hass(hass)
     await hass.config_entries.async_setup(mock_config_entry.entry_id)
     await hass.async_block_till_done(wait_background_tasks=True)

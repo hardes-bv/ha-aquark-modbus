@@ -1,4 +1,3 @@
-"""The Aquark Modbus integration."""
 """Integrate Aquark chlorinators over Modbus into Home Assistant."""
 
 from aquark_modbus import Chlorinator
@@ -11,7 +10,7 @@ from .const import CONF_UNIT_ID
 from .coordinator import AquarkConfigEntry, AquarkCoordinator
 from .helpers import create_modbus_params
 
-PLATFORMS: list[Platform] = [Platform.CLIMATE]
+PLATFORMS: list[Platform] = [Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: AquarkConfigEntry) -> bool:

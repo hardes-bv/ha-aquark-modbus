@@ -1,4 +1,4 @@
-"""Config flow for the Example Air integration."""
+"""Config flow for the Aquark (Modbus) integration."""
 
 import logging
 import probatio
@@ -54,7 +54,7 @@ STEP_SERIAL_DATA_SCHEMA = probatio.Schema(
     }
 )
 
-# The link settings that identify one heat pump, by connection type.
+# The link settings that identify one chlorinator, by connection type.
 IDENTITY_KEYS = {
     TYPE_TCP: (CONF_TYPE, CONF_HOST, CONF_PORT, CONF_UNIT_ID),
     TYPE_SERIAL: (CONF_TYPE, CONF_DEVICE, CONF_UNIT_ID),

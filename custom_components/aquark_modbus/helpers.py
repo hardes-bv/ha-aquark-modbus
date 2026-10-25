@@ -1,4 +1,4 @@
-"""Helpers for the Fairland (Modbus) integration."""
+"""Helpers for the Aquark (Modbus) integration."""
 
 from collections.abc import Mapping
 from typing import Any
