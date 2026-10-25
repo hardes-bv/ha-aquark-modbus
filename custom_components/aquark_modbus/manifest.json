@@ -7,9 +7,9 @@
     "usb"
   ],
   "documentation": "https://github.com/hardes-bv/ha-aquark-modbus",
-  "issue_tracker": "https://github.com/hardes-bv/ha-aquark-modbus/issues",
   "integration_type": "device",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/hardes-bv/ha-aquark-modbus/issues",
   "loggers": [
     "custom_components.aquark_modbus",
     "aquark_modbus"
