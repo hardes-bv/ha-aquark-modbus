@@ -14,6 +14,7 @@
     "custom_components.aquark_modbus",
     "aquark_modbus"
   ],
+  "quality_scale": "bronze",
   "requirements": ["aquark-modbus==0.1.2"],
   "version": "0.0.1"
 }
