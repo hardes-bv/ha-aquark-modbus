@@ -1,0 +1,9 @@
+{
+  "domain": "aquark_modbus",
+  "name": "Aquark (Modbus)",
+  "codeowners": ["@ringods"],
+  "documentation": "https://github.com/hardes-bv/ha-aquark-modbus",
+  "iot_class": "local_polling",
+  "requirements": ["aquark-modbus==0.1.2"],
+  "version": "0.1.0"
+}
