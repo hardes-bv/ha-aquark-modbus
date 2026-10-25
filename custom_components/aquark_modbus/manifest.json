@@ -2,8 +2,18 @@
   "domain": "aquark_modbus",
   "name": "Aquark (Modbus)",
   "codeowners": ["@ringods"],
+  "dependencies": [
+    "modbus",
+    "usb"
+  ],
   "documentation": "https://github.com/hardes-bv/ha-aquark-modbus",
+  "integration_type": "device",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/hardes-bv/ha-aquark-modbus/issues",
+  "loggers": [
+    "custom_components.aquark_modbus",
+    "aquark_modbus"
+  ],
   "requirements": ["aquark-modbus==0.1.2"],
-  "version": "0.1.0"
+  "version": "0.0.1"
 }
