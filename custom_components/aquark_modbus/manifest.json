@@ -1,7 +1,6 @@
 {
   "domain": "aquark_modbus",
   "name": "Aquark (Modbus)",
-  "categories": ["water.water_treatment"],
   "codeowners": ["@ringods"],
   "dependencies": [
     "modbus",
