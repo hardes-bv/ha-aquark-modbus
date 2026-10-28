@@ -264,15 +264,15 @@ wheels = [
 
 [[package]]
 name = "aquark-modbus"
-version = "0.1.2"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "modbus-connection" },
     { name = "semver" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/40/c9b7eb8ea446db135b469d9b07e0d3308d38fb369d3ec987977554a2705d/aquark_modbus-0.1.2.tar.gz", hash = "sha256:663cf5acdccb21d0b9519f4647a553672419460c5b4b440b15ae77836926dd32", size = 10541, upload-time = "2026-10-25T10:24:29.381Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/85/26/cc535f1a8d608a0d43bb567d1067b33161ea5627902e76ea6a0a68c2ae4f/aquark_modbus-0.2.0.tar.gz", hash = "sha256:94dde0e1f60085658fe2d6a2b9258d3412ab865bd5627973894bdf68b404aacd", size = 11381, upload-time = "2026-10-28T17:32:57.837Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/fc/84/5900ac195dd9dc33c7d6ce98effde0d2b3385f112bc77a8d11e22d40c7c2/aquark_modbus-0.1.2-py3-none-any.whl", hash = "sha256:f4afb11968d7e1c1e3825943215e6cee1a5594103d64851a435dc5047c4e2908", size = 12521, upload-time = "2026-10-25T10:24:28.419Z" },
+    { url = "https://files.pythonhosted.org/packages/65/87/2bd76d4b4487fa01d6401eadf0ffe9518b10c618217f6a98572e0daa46b2/aquark_modbus-0.2.0-py3-none-any.whl", hash = "sha256:26839847b8bdf2b56bd8e44b63632a0769f5ad85dacedf405d2f4b83327cbcf7", size = 13431, upload-time = "2026-10-28T17:32:57.041Z" },
 ]
 
 [[package]]
@@ -1007,7 +1007,7 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "aquark-modbus", specifier = "==0.1.2" }]
+requires-dist = [{ name = "aquark-modbus", specifier = "==0.2.0" }]
 
 [package.metadata.requires-dev]
 dev = [{ name = "homeassistant", specifier = "==2026.10.2" }]

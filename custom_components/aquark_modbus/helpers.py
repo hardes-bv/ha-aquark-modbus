@@ -3,9 +3,8 @@
 from collections.abc import Mapping
 from typing import Any
 
-from modbus_connection import ModbusSerialParams, ModbusTcpParams
-
 from homeassistant.const import CONF_DEVICE, CONF_HOST, CONF_PORT, CONF_TYPE
+from modbus_connection import ModbusSerialParams, ModbusTcpParams
 
 from .const import SERIAL_BAUDRATE, SERIAL_PARITY, SERIAL_STOPBITS, TYPE_SERIAL
 

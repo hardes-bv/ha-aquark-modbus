@@ -3,14 +3,13 @@
 import logging
 from typing import override
 
-from aquark_modbus import AquarkConnectionError, AquarkError
-from aquark_modbus import Chlorinator
-from modbus_connection.model import UpdateReport
-
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from modbus_connection.model import UpdateReport
+
+from aquark_modbus import AquarkConnectionError, Chlorinator
 
 from .const import DOMAIN, MANUFACTURER, UPDATE_INTERVAL
 from .helpers import error_detail

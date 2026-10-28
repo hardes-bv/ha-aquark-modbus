@@ -1,18 +1,15 @@
 """Config flow for the Aquark (Modbus) integration."""
 
 import logging
-import probatio
 from collections.abc import Mapping
 from typing import Any, override
 
-from aquark_modbus import Chlorinator, AquarkError, AquarkConnectionError
-
+import probatio
 from homeassistant.components.modbus import async_get_temporary_unit
-from homeassistant.core import HomeAssistant
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_DEVICE, CONF_HOST, CONF_PORT, CONF_TYPE
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.selector import (
     NumberSelector,
     NumberSelectorConfig,
@@ -21,7 +18,16 @@ from homeassistant.helpers.selector import (
     TextSelector,
 )
 
-from .const import CONF_UNIT_ID, DEFAULT_PORT, DOMAIN, TYPE_SERIAL, TYPE_TCP, DEFAULT_UNIT_ID
+from aquark_modbus import AquarkConnectionError, AquarkError, Chlorinator
+
+from .const import (
+    CONF_UNIT_ID,
+    DEFAULT_PORT,
+    DEFAULT_UNIT_ID,
+    DOMAIN,
+    TYPE_SERIAL,
+    TYPE_TCP,
+)
 from .helpers import create_modbus_params
 
 _LOGGER = logging.getLogger(__name__)
@@ -60,8 +66,10 @@ IDENTITY_KEYS = {
     TYPE_SERIAL: (CONF_TYPE, CONF_DEVICE, CONF_UNIT_ID),
 }
 
+
 class _UnitSilentError(Exception):
     """The link is up, but the chlorinator behind it does not answer."""
+
 
 async def _async_probe(hass: HomeAssistant, data: Mapping[str, Any]) -> None:
     """Read the chlorinator behind these link settings, or raise."""
@@ -74,6 +82,7 @@ async def _async_probe(hass: HomeAssistant, data: Mapping[str, Any]) -> None:
                 raise _UnitSilentError from err
             raise
 
+
 class AquarkConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for a Aquark chlorinator."""
 
@@ -81,7 +90,7 @@ class AquarkConfigFlow(ConfigFlow, domain=DOMAIN):
 
     @override
     async def async_step_user(
-            self, user_input: dict[str, Any] | None = None
+        self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Let the user pick how the chlorinator is reached."""
         return self.async_show_menu(
@@ -89,13 +98,13 @@ class AquarkConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_tcp(
-            self, user_input: dict[str, Any] | None = None
+        self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle a chlorinator behind a Modbus TCP gateway."""
         return await self._async_step_link(TYPE_TCP, STEP_TCP_DATA_SCHEMA, user_input)
 
     async def async_step_serial(
-            self, user_input: dict[str, Any] | None = None
+        self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Handle a chlorinator on a serial port."""
         return await self._async_step_link(
@@ -103,10 +112,10 @@ class AquarkConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
     async def _async_step_link(
-            self,
-            connection_type: str,
-            schema: probatio.Schema,
-            user_input: dict[str, Any] | None,
+        self,
+        connection_type: str,
+        schema: probatio.Schema,
+        user_input: dict[str, Any] | None,
     ) -> ConfigFlowResult:
         """Ask for the link settings, then probe the chlorinator behind them."""
         errors: dict[str, str] = {}
@@ -135,7 +144,7 @@ class AquarkConfigFlow(ConfigFlow, domain=DOMAIN):
         except AquarkConnectionError:
             return {"base": "cannot_connect"}
         except AquarkError:
-            return {"base": "not_a_fairland_heat_pump"}
+            return {"base": "not_an_aquark_chlorinator"}
         except HomeAssistantError:
             # Another config entry holds this connection with other settings.
             return {"base": "link_in_use"}
