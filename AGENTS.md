@@ -24,7 +24,7 @@ custom_components/aquark_modbus/   # The integration
   __init__.py        # async_setup_entry / async_unload_entry, PLATFORMS list
   config_flow.py     # User flow: menu → tcp | serial, probes device before creating entry
   const.py           # DOMAIN, fixed serial line settings, defaults, poll interval
-  coordinator.py     # AquarkCoordinator: polls Chlorinator, tracks per-block failures
+  coordinator.py     # AquarkDataUpdateCoordinator: polls Chlorinator, tracks per-block failures
   entity.py          # AquarkEntity base: per-block availability, shared write/error handling
   helpers.py         # create_modbus_params(), error_detail()
   sensor.py          # Sensor platform (pool_temperature, ph)
@@ -44,15 +44,16 @@ hacs.json            # HACS metadata
 
 - **Package manager: `uv`**. Run everything through it (e.g. `uv run python ...`).
 - **Python 3.14.2**, pinned by `mise.toml` (mise manages the interpreter).
-- The dev dependency group pins `homeassistant==2026.10.2`.
-
-⚠️ The venv currently has **no pytest/pytest-homeassistant-custom-component/syrupy**
-installed even though `tests/conftest.py` imports them. To run tests you must first
-add them to the dev group, e.g.:
+- The dev dependency group pins `homeassistant==2026.10.2`, `pytest`, and
+  `pytest-homeassistant-custom-component` (HA's test plugin stack, incl.
+  `pytest-asyncio`, `syrupy`, `respx`). It is built against the same HA version.
+- pytest is configured in `pyproject.toml` under `[tool.pytest.ini_options]`
+  (`testpaths = ["tests"]`, `asyncio_mode = "auto"` — required by
+  `pytest-asyncio`).
+- Run the test suite with:
 
 ```sh
-uv add --group dev pytest pytest-homeassistant-custom-component syrupy
-uv run pytest tests/ -v
+uv run pytest -v
 ```
 
 There is no linter/formatter/type-checker configured in `pyproject.toml` yet.
@@ -145,34 +146,3 @@ other integration name — see Known Issues).
 - `manifest.json` is the source of truth for HA metadata; keep `requirements`
   and `pyproject.toml` dependencies in sync when bumping `aquark-modbus`.
 - Bump the version in `manifest.json` on changes.
-
-## Known Issues / TODOs (verify current state before relying on these)
-
-The repo was recently renamed from a "Fairland heat pump" integration and is
-mid-refactor — expect stale references:
-
-1. **`tests/conftest.py` is broken**: patch targets reference
-   `custom_components.fairland_modbus` (old name), it references an undefined
-   `HEATING`, patches `aquark_modbus.heat_pump.device.WORKING_MODE_SETTLE`
-   (does not exist in `aquark-modbus` 0.1.2), and loads the mock image at unit
-   8 while `mock_unit`/`MOCK_TCP_DATA` use unit 1.
-2. **`config_flow.py` calls `Chlorinator(unit).async_validate()`** — that method
-   does not exist on `aquark-modbus` 0.1.2 (the probe will fail at runtime).
-3. **`sensor.py`'s `native_value` passes `self.coordinator.data`** (the
-   `UpdateReport`) to `value_fn`, but `value_fn` is typed
-   `Callable[[Chlorinator], float | int]` and reads e.g.
-   `chlorinator.readings.pool_temperature` — the first state read crashes;
-   it should pass `self.coordinator.chlorinator`.
-4. **`translations/en.json` is empty** although many keys are referenced:
-   `cannot_connect`, `unit_silent`, `not_a_fairland_heat_pump`, `link_in_use`,
-   `unknown`, `no_block_answered`, `write_failed`, `invalid_value`
-   (`no_response`, `write_refused` are in commented-out code).
-5. `quality_scale.yaml` marks all rules `todo` while `manifest.json` already
-   claims bronze — reconcile as rules are satisfied.
-6. `const.DEFAULT_UNIT_ID = 8` has a TODO to move into the `aquark-modbus`
-   library.
-7. `README.md` is empty; `pyproject.toml` description is a placeholder.
-
-When fixing these, prefer minimal, consistent changes and keep the
-`aquark-modbus` library as the single source of protocol truth (don't add
-register parsing to this repo).
