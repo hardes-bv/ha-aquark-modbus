@@ -1,1 +1,1 @@
-"""The Aquark Modbus integration."""
+"""Integrate Aquark chlorinators over Modbus into Home Assistant."""
