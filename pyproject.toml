@@ -18,4 +18,9 @@ package = false
 dev = [
     "homeassistant==2026.10.2",
     "pytest>=9.0.3",
+    "pytest-homeassistant-custom-component>=0.13.373",
 ]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
