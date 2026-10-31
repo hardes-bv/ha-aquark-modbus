@@ -4,8 +4,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import override
 
-from aquark_modbus import Chlorinator
-
 from homeassistant.components.sensor import (
     SensorDeviceClass,
     SensorEntity,
@@ -13,14 +11,14 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.const import (
-    UnitOfDensity,
-    UnitOfRatio,
     UnitOfTemperature,
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import (
     AddConfigEntryEntitiesCallback,
 )
+
+from aquark_modbus import Chlorinator
 
 from .coordinator import AquarkConfigEntry, AquarkCoordinator
 from .entity import AquarkEntity
@@ -58,16 +56,15 @@ SENSORS: tuple[AquarkSensorEntityDescription, ...] = (
 
 
 async def async_setup_entry(
-        hass: HomeAssistant,
-        entry: AquarkConfigEntry,
-        async_add_entities: AddConfigEntryEntitiesCallback,
+    hass: HomeAssistant,
+    entry: AquarkConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the Aquark sensors."""
     coordinator = entry.runtime_data
 
     async_add_entities(
-        AquarkSensor(coordinator, description)
-        for description in SENSORS
+        AquarkSensor(coordinator, description) for description in SENSORS
     )
 
 
@@ -77,16 +74,14 @@ class AquarkSensor(AquarkEntity, SensorEntity):
     entity_description: AquarkSensorEntityDescription
 
     def __init__(
-            self,
-            coordinator: AquarkCoordinator,
-            description: AquarkSensorEntityDescription,
+        self,
+        coordinator: AquarkCoordinator,
+        description: AquarkSensorEntityDescription,
     ) -> None:
         """Initialize the sensor."""
         super().__init__(coordinator)
         self.entity_description = description
-        self._attr_unique_id = (
-            f"{coordinator.config_entry.entry_id}_{description.key}"
-        )
+        self._attr_unique_id = f"{coordinator.config_entry.entry_id}_{description.key}"
 
     @property
     @override

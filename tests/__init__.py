@@ -1,7 +1,8 @@
 """Tests for the Aquark (Modbus) integration."""
 
-from custom_components.aquark_modbus.const import CONF_UNIT_ID, TYPE_SERIAL, TYPE_TCP
 from homeassistant.const import CONF_DEVICE, CONF_HOST, CONF_PORT, CONF_TYPE
+
+from custom_components.aquark_modbus.const import CONF_UNIT_ID, TYPE_SERIAL, TYPE_TCP
 
 MOCK_ENTRY_ID = "01JFAIRLANDHEATPUMP0000000"
 MOCK_TITLE = "Aquark chlorinator"

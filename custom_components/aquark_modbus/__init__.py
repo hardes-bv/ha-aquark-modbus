@@ -1,10 +1,10 @@
 """Integrate Aquark chlorinators over Modbus into Home Assistant."""
 
-from aquark_modbus import Chlorinator
-
 from homeassistant.components.modbus import async_get_unit
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+
+from aquark_modbus import Chlorinator
 
 from .const import CONF_UNIT_ID
 from .coordinator import AquarkConfigEntry, AquarkCoordinator

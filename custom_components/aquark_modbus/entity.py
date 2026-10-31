@@ -4,11 +4,11 @@ from collections.abc import Awaitable
 from dataclasses import dataclass
 from typing import override
 
-from aquark_modbus import AquarkConnectionError, AquarkError#, AquarkRefusedError
-
 from homeassistant.exceptions import HomeAssistantError, ServiceValidationError
 from homeassistant.helpers.entity import EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
+
+from aquark_modbus import AquarkConnectionError, AquarkError
 
 from .const import DOMAIN
 from .coordinator import AquarkCoordinator

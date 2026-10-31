@@ -25,10 +25,10 @@ class AquarkCoordinator(DataUpdateCoordinator[UpdateReport]):
     config_entry: AquarkConfigEntry
 
     def __init__(
-            self,
-            hass: HomeAssistant,
-            entry: AquarkConfigEntry,
-            chlorinator: Chlorinator,
+        self,
+        hass: HomeAssistant,
+        entry: AquarkConfigEntry,
+        chlorinator: Chlorinator,
     ) -> None:
         """Initialize the coordinator."""
         super().__init__(
