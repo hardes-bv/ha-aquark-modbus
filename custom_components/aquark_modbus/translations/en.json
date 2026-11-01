@@ -1,1 +1,44 @@
-{}
+{
+  "config": {
+    "flow_title": "Aquark chlorinator",
+    "step": {
+      "user": {
+        "title": "Choose a connection method",
+        "menu_options": {
+          "tcp": "Modbus TCP gateway",
+          "serial": "Serial port"
+        }
+      },
+      "tcp": {
+        "title": "Connect via Modbus TCP",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "unit": "Modbus unit ID"
+        }
+      },
+      "serial": {
+        "title": "Connect via serial port",
+        "data": {
+          "device": "Serial device",
+          "unit": "Modbus unit ID"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the chlorinator. Check the connection details and that the device is powered on, then try again.",
+      "not_an_aquark": "The device at this address does not look like an Aquark chlorinator.",
+      "unknown": "Unexpected error while probing the chlorinator."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "firmware_version": {
+        "name": "Firmware Version"
+      }
+    }
+  }
+}
