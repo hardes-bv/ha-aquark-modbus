@@ -19,6 +19,13 @@ dev = [
     "homeassistant==2026.10.2",
     "pytest>=9.0.3",
     "pytest-homeassistant-custom-component>=0.13.373",
+    # HA installs the `modbus` and `usb` components' own requirements
+    # (declared in `manifest.json` dependencies) at runtime; the dev env needs
+    # them too so the components can be imported in tests. Pins match the
+    # components' manifests.
+    "aiousbwatcher==1.1.2",
+    "pymodbus==3.13.1",
+    "tmodbus[async-serial]==0.6.2",
 ]
 
 [tool.pytest.ini_options]

@@ -1,24 +1,33 @@
-"""Tests for the aquark_modbus data update coordinator.
+"""Tests for the aquark_modbus setup, unload, and data update coordinator.
 
-These tests build the coordinator directly (rather than through
-``init_integration``) so it can be verified in isolation, before the
-integration's setup/unload code lands.
+The coordinator tests build the coordinator directly (rather than through
+``init_integration``) so it can be verified in isolation; the setup tests go
+through the full ``hass.config_entries`` path with the mock Modbus unit.
 """
 
 from __future__ import annotations
 
+from unittest import mock
+
 import pytest
 from aquark_modbus import Chlorinator, DeviceType
+from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import CoreState, HomeAssistant
 from homeassistant.helpers.update_coordinator import UpdateFailed
-from modbus_connection import ModbusConnectionError
+from modbus_connection import ModbusConnectionError, ModbusTimeoutError
 from modbus_connection.mock import MockModbusConnection
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 from semver import Version
 
-from custom_components.aquark_modbus.const import DOMAIN
+from custom_components.aquark_modbus.const import DOMAIN, unique_id_for
 from custom_components.aquark_modbus.coordinator import AquarkDataUpdateCoordinator
-from tests.conftest import DEFAULT_UNIT, TCP_HOST, TCP_PORT, tcp_entry_data
+from tests.conftest import (
+    DEFAULT_UNIT,
+    TCP_HOST,
+    TCP_PORT,
+    serial_entry_data,
+    tcp_entry_data,
+)
 
 
 def _make_entry(hass: HomeAssistant) -> MockConfigEntry:
@@ -35,6 +44,71 @@ def _make_entry(hass: HomeAssistant) -> MockConfigEntry:
 def test_placeholder(hass: HomeAssistant) -> None:
     """Smoke test: the HA test instance is up and running."""
     assert hass.state == CoreState.running
+
+
+async def test_setup_and_unload(
+    hass: HomeAssistant,
+    init_integration: MockConfigEntry,
+) -> None:
+    """The entry loads, exposes the coordinator, and unloads cleanly."""
+    entry = init_integration
+    assert isinstance(entry.runtime_data, AquarkDataUpdateCoordinator)
+
+    assert await hass.config_entries.async_unload(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert entry.state is ConfigEntryState.NOT_LOADED
+
+
+async def test_serial_entry_sets_up(
+    hass: HomeAssistant,
+    mock_get_unit: mock.MagicMock,
+    mock_connection: MockModbusConnection,
+) -> None:
+    """A serial connection goes through the ``ModbusSerialParams`` branch."""
+    data = serial_entry_data()
+    entry = MockConfigEntry(
+        domain=DOMAIN,
+        data=data,
+        unique_id=unique_id_for(data),
+    )
+    entry.add_to_hass(hass)
+
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert entry.state is ConfigEntryState.LOADED
+    assert isinstance(entry.runtime_data, AquarkDataUpdateCoordinator)
+
+
+async def test_not_ready_on_connection_error(
+    hass: HomeAssistant,
+    mock_get_unit: mock.MagicMock,
+    mock_connection: MockModbusConnection,
+) -> None:
+    """A dead link defers the setup so Home Assistant retries with backoff."""
+    mock_connection.for_unit(DEFAULT_UNIT).fail_requests(ModbusConnectionError())
+    entry = _make_entry(hass)
+
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert entry.state is ConfigEntryState.SETUP_RETRY
+
+
+async def test_not_ready_on_timeout(
+    hass: HomeAssistant,
+    mock_get_unit: mock.MagicMock,
+    mock_connection: MockModbusConnection,
+) -> None:
+    """A silent unit (timeout) defers the setup the same way."""
+    mock_connection.for_unit(DEFAULT_UNIT).fail_requests(ModbusTimeoutError())
+    entry = _make_entry(hass)
+
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert entry.state is ConfigEntryState.SETUP_RETRY
 
 
 async def test_coordinator_reads_model(
