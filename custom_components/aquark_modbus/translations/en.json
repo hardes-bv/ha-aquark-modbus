@@ -1,1 +1,9 @@
-{}
+{
+  "entity": {
+    "sensor": {
+      "firmware_version": {
+        "name": "Firmware Version"
+      }
+    }
+  }
+}
