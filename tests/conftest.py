@@ -136,8 +136,8 @@ def register_image(request: pytest.FixtureRequest) -> RegisterImage:
             3: 745,  # ideal pH, x100 -> 7.45
             4: 50,  # pool volume in m³
             5: 0,  # timer disabled
-            6: 8 * 60,  # power on at 08:00
-            7: 20 * 60,  # power off at 20:00
+            6: 8 << 8,  # power on at 08:00 (hour:minute register)
+            7: 20 << 8,  # power off at 20:00 (hour:minute register)
         },
     }
 

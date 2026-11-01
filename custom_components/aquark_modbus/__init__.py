@@ -7,20 +7,12 @@ import logging
 from homeassistant.components.modbus import async_get_unit
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from modbus_connection import ModbusSerialParams, ModbusTcpParams
 
 from aquark_modbus import Chlorinator
 
-from .const import (
-    CONF_CONNECTION,
-    CONF_DEVICE,
-    CONF_HOST,
-    CONF_PORT,
-    CONF_TCP,
-    CONF_UNIT,
-    PLATFORMS,
-)
+from .const import CONF_UNIT, PLATFORMS
 from .coordinator import AquarkDataUpdateCoordinator
+from .helpers import create_modbus_params
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -33,12 +25,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     with backoff instead of surfacing an error to the user.
     """
     data = entry.data
-    if data[CONF_CONNECTION] == CONF_TCP:
-        params = ModbusTcpParams(host=data[CONF_HOST], port=data[CONF_PORT])
-    else:
-        params = ModbusSerialParams(device=data[CONF_DEVICE])
-
-    unit = async_get_unit(hass, entry, params, data[CONF_UNIT])
+    unit = async_get_unit(hass, entry, create_modbus_params(data), data[CONF_UNIT])
     coordinator = AquarkDataUpdateCoordinator(hass, entry, Chlorinator(unit))
     await coordinator.async_config_entry_first_refresh()
 
