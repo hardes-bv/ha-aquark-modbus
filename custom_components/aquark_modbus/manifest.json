@@ -2,6 +2,7 @@
   "domain": "aquark_modbus",
   "name": "Aquark (Modbus)",
   "codeowners": ["@ringods"],
+  "config_flow": true,
   "dependencies": [
     "modbus",
     "usb"
@@ -15,6 +16,6 @@
     "aquark_modbus"
   ],
   "quality_scale": "bronze",
-  "requirements": ["aquark-modbus==0.2.0"],
-  "version": "0.0.1"
+  "requirements": ["aquark-modbus==0.2.1"],
+  "version": "0.1.0"
 }

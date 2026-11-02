@@ -1,0 +1,15 @@
+# serializer version: 1
+# name: test_firmware_version_snapshot
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Mr Pure Pro Firmware Version',
+      <EntityStateAttribute.ICON: 'icon'>: 'mdi:chip',
+    }),
+    'context': <ANY>,
+    'entity_id': 'sensor.mr_pure_pro_firmware_version',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '2.1.3',
+  })
+# ---

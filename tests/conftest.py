@@ -52,6 +52,7 @@ CONF_CONNECTION = "connection"  # "tcp" | "serial"
 CONF_HOST = "host"
 CONF_PORT = "port"
 CONF_UNIT = "unit"
+CONF_DEVICE = "device"
 
 type RegisterImage = Mapping[str, Mapping[int, int | bool]]
 
@@ -66,6 +67,18 @@ def tcp_entry_data(
         CONF_CONNECTION: "tcp",
         CONF_HOST: host,
         CONF_PORT: port,
+        CONF_UNIT: unit,
+    }
+
+
+def serial_entry_data(
+    device: str = "/dev/ttyUSB0",
+    unit: int = DEFAULT_UNIT,
+) -> dict[str, Any]:
+    """Config entry data for a serial connection, as stored by the config flow."""
+    return {
+        CONF_CONNECTION: "serial",
+        CONF_DEVICE: device,
         CONF_UNIT: unit,
     }
 
@@ -123,8 +136,8 @@ def register_image(request: pytest.FixtureRequest) -> RegisterImage:
             3: 745,  # ideal pH, x100 -> 7.45
             4: 50,  # pool volume in m³
             5: 0,  # timer disabled
-            6: 8 * 60,  # power on at 08:00
-            7: 20 * 60,  # power off at 20:00
+            6: 8 << 8,  # power on at 08:00 (hour:minute register)
+            7: 20 << 8,  # power off at 20:00 (hour:minute register)
         },
     }
 
@@ -174,8 +187,10 @@ def mock_temporary_unit(
     ) -> AsyncGenerator[MockModbusUnit]:
         yield mock_connection.for_unit(unit_id)
 
+    # Patched on ``config_flow`` because that is where the name is imported;
+    # the package ``__init__`` does not import ``async_get_temporary_unit``.
     with mock.patch(
-        "custom_components.aquark_modbus.async_get_temporary_unit",
+        "custom_components.aquark_modbus.config_flow.async_get_temporary_unit",
         side_effect=_temporary_unit,
     ) as patched:
         yield patched
