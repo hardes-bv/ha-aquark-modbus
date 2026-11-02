@@ -43,5 +43,11 @@ Go to **Settings** > **Devices & services** > **Add integration**, select
 **Aquark (Modbus)**, then choose the network or the serial port and enter the gateway
 address or the adapter.
 
+## Removal
+
+To remove the integration, go to **Settings** > **Devices & services**, select
+**Aquark (Modbus)**, and delete it. This removes the config entry and all its
+entities.
+
 ## License
 This project is licensed under the Apache v2 License - see the LICENSE file for details.
